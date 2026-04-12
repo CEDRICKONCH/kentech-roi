@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}{{ r.entreprise }} — Détail ROI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="detail-breadcrumb">
+    <a href="/entreprises">← Retour aux entreprises</a>
+  </div>
+  <h1>{{ r.entreprise }}</h1>
+  <p>Réponse #{{ r.id }} — {{ r.created_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+</div>
+
+<div class="detail-grid">
+
+  <!-- Colonne gauche -->
+  <div class="detail-col">
+
+    <!-- KPIs principaux -->
+    <div class="detail-card detail-card--kpis">
+      <h2 class="card-title">Résultats ROI</h2>
+      <div class="kpi-grid">
+        <div class="kpi-box kpi-box--red">
+          <div class="kpi-val">{{ r.cout_pannes_annuel | eur }}</div>
+          <div class="kpi-lbl">Coût pannes / an</div>
+        </div>
+        <div class="kpi-box kpi-box--green">
+          <div class="kpi-val">{{ r.total_economies_an | eur }}</div>
+          <div class="kpi-lbl">Économies / an</div>
+        </div>
+        <div class="kpi-box kpi-box--blue">
+          <div class="kpi-val">{{ r.roi_pct }} %</div>
+          <div class="kpi-lbl">ROI</div>
+        </div>
+        <div class="kpi-box kpi-box--blue">
+          <div class="kpi-val">{{ r.payback_mois }} mois</div>
+          <div class="kpi-lbl">Payback</div>
+        </div>
+      </div>
+
+      <div class="kpi-gain">
+        <span class="kg-lbl">🏆 Gain net 3 ans</span>
+        <span class="kg-val">
+          {% set gain = (r.total_economies_an * 3 - r.investissement) %}
+          {{ gain | eur }}
+        </span>
+      </div>
+
+      <div class="kpi-solution">
+        Solution recommandée : <strong>{{ r.formule_recommandee }}</strong>
+        &nbsp;·&nbsp;
+        Investissement : <strong>{{ r.investissement | eur }}</strong>
+      </div>
+    </div>
+
+    <!-- Score maturité -->
+    <div class="detail-card">
+      <h2 class="card-title">Score de Maturité Digitale</h2>
+      <div class="score-block">
+        <div class="score-circle score--{{ 'green' if r.score_maturite >= 60 else ('orange' if r.score_maturite >= 30 else 'red') }}">
+          {{ r.score_maturite }}
+          <span class="score-total">/100</span>
+        </div>
+        <div class="score-info">
+          <div class="score-niveau">Niveau : <strong>{{ r.niveau_maturite }}</strong></div>
+          <div class="score-bar-wrap">
+            <div class="score-bar" style="width: {{ r.score_maturite }}%;
+              background: {{ '#22C55E' if r.score_maturite >= 60 else ('#D97706' if r.score_maturite >= 30 else '#DC2626') }}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Décomposition économies -->
+    <div class="detail-card">
+      <h2 class="card-title">Décomposition des Économies</h2>
+      <table class="detail-table">
+        <tr>
+          <td>Réduction maintenance corrective</td>
+          <td class="td-right td-green">{{ r.economie_maintenance | eur }}</td>
+        </tr>
+        <tr>
+          <td>Réduction pannes non planifiées</td>
+          <td class="td-right td-green">{{ r.economie_pannes | eur }}</td>
+        </tr>
+        <tr>
+          <td>Optimisation énergétique IA</td>
+          <td class="td-right td-green">{{ r.economie_energie | eur }}</td>
+        </tr>
+        <tr class="tr-total">
+          <td><strong>Total économies / an</strong></td>
+          <td class="td-right"><strong>{{ r.total_economies_an | eur }}</strong></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Variables de calcul -->
+    <div class="detail-card">
+      <h2 class="card-title">Variables de Calcul</h2>
+      <table class="detail-table">
+        <tr><td>Coût horaire d'arrêt</td><td class="td-right">{{ r.cout_horaire | eur }}/h</td></tr>
+        <tr><td>Durée moyenne d'une panne</td><td class="td-right">{{ r.duree_panne_h }} h</td></tr>
+        <tr><td>Pannes estimées / an</td><td class="td-right">{{ r.nb_pannes_an | num }}</td></tr>
+        <tr><td>Nombre de machines</td><td class="td-right">{{ r.nb_machines_valeur }}</td></tr>
+        <tr><td>CA annuel estimé</td><td class="td-right">{{ r.ca_valeur | eur }}</td></tr>
+        <tr><td>Budget maintenance estimé</td><td class="td-right">{{ r.budget_maintenance_valeur | eur }}</td></tr>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Colonne droite -->
+  <div class="detail-col">
+
+    <!-- Infos contact -->
+    <div class="detail-card">
+      <h2 class="card-title">Informations Contact</h2>
+      <table class="detail-table">
+        <tr><td>Prénom / Nom</td><td class="td-right">{{ r.prenom }} {{ r.nom }}</td></tr>
+        <tr><td>Email</td><td class="td-right"><a href="mailto:{{ r.email }}">{{ r.email }}</a></td></tr>
+        <tr><td>Téléphone</td><td class="td-right">{{ r.tel or '—' }}</td></tr>
+        <tr><td>Ville</td><td class="td-right">{{ r.ville or '—' }}</td></tr>
+        <tr><td>Pays</td><td class="td-right">{{ r.pays or '—' }}</td></tr>
+      </table>
+    </div>
+
+    <!-- Réponses Q1-Q3 -->
+    <div class="detail-card">
+      <h2 class="card-title">Bloc 1 — Profil Usine</h2>
+      <table class="detail-table">
+        <tr><td>Secteur d'activité</td><td class="td-right">{{ r.q1_secteur }}</td></tr>
+        <tr><td>Effectif</td><td class="td-right">{{ r.q2_effectif }}</td></tr>
+        <tr><td>Machines critiques</td><td class="td-right">{{ r.q3_machines }}</td></tr>
+      </table>
+    </div>
+
+    <!-- Réponses Q4-Q6 -->
+    <div class="detail-card">
+      <h2 class="card-title">Bloc 2 — Maintenance Actuelle</h2>
+      <table class="detail-table">
+        <tr><td>Type de maintenance</td><td class="td-right">{{ r.q4_maintenance }}</td></tr>
+        <tr><td>Pannes / mois</td><td class="td-right">{{ r.q5_pannes_mois }}</td></tr>
+        <tr><td>Durée arrêt moyen</td><td class="td-right">{{ r.q6_duree_arret }}</td></tr>
+      </table>
+    </div>
+
+    <!-- Réponses Q7-Q9 -->
+    <div class="detail-card">
+      <h2 class="card-title">Bloc 3 — Impact Financier</h2>
+      <table class="detail-table">
+        <tr><td>Chiffre d'affaires</td><td class="td-right">{{ r.q7_ca }}</td></tr>
+        <tr><td>Budget maintenance</td><td class="td-right">{{ r.q8_budget_maintenance }}</td></tr>
+        <tr><td>Pénalités clients</td><td class="td-right">{{ r.q9_penalites }}</td></tr>
+      </table>
+    </div>
+
+    <!-- Réponses Q10-Q11 -->
+    <div class="detail-card">
+      <h2 class="card-title">Bloc 4 — Maturité Digitale</h2>
+      <table class="detail-table">
+        <tr><td>ERP</td><td class="td-right">{{ r.q10_erp }}</td></tr>
+        <tr><td>Capteurs</td><td class="td-right">{{ r.q11_capteurs }}</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

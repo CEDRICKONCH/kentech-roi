@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Rapport envoyé — Kentech{% endblock %}
+
+{% block content %}
+<div class="merci-page">
+  <div class="merci-card">
+    <div class="merci-icon">✅</div>
+    <h1>Merci {{ r.prenom }} !</h1>
+    <p class="merci-sub">Votre rapport ROI a été généré et envoyé à <strong>{{ r.email }}</strong></p>
+
+    <div class="merci-kpis">
+      <div class="merci-kpi">
+        <div class="mk-val">{{ r.cout_pannes_annuel | eur }}</div>
+        <div class="mk-lbl">Coût pannes actuelles / an</div>
+      </div>
+      <div class="merci-kpi merci-kpi--green">
+        <div class="mk-val">{{ r.total_economies_an | eur }}</div>
+        <div class="mk-lbl">Économies potentielles / an</div>
+      </div>
+      <div class="merci-kpi">
+        <div class="mk-val">{{ r.roi_pct }} %</div>
+        <div class="mk-lbl">ROI estimé</div>
+      </div>
+      <div class="merci-kpi">
+        <div class="mk-val">{{ r.payback_mois }} mois</div>
+        <div class="mk-lbl">Délai de remboursement</div>
+      </div>
+    </div>
+
+    <div class="merci-info">
+      <p>📧 Vérifiez votre boîte email (et vos spams si nécessaire).</p>
+      <p>🤝 Notre équipe reviendra vers vous sous 24h.</p>
+    </div>
+
+    <a href="/" class="btn-back">Faire un autre diagnostic</a>
+  </div>
+</div>
+{% endblock %}

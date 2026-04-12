@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+{% block title %}Diagnostic ROI — Kentech{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Calculez votre potentiel d'économies IA</h1>
+    <p>3 minutes · 12 questions · Rapport personnalisé envoyé par email</p>
+  </div>
+</div>
+
+<div class="form-container">
+  <form method="post" action="/submit" novalidate>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- BLOC 1 — PROFIL USINE -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="form-bloc">
+      <div class="bloc-header">
+        <span class="bloc-num">1</span>
+        <div>
+          <div class="bloc-title">Profil Usine</div>
+          <div class="bloc-sub">3 questions</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Q1 — Votre secteur d'activité ? <span class="req">*</span></label>
+        <div class="radio-grid">
+          {% set q1_opts = [
+            "Agroalimentaire",
+            "Métallurgie / Mécanique",
+            "Plasturgie / Caoutchouc",
+            "Chimie / Pharmacie",
+            "Bois / Papier / Emballage",
+            "Électronique / Câblage",
+            "Autre"
+          ] %}
+          {% for opt in q1_opts %}
+          <label class="radio-card">
+            <input type="radio" name="q1_secteur" value="{{ opt }}" required/>
+            <span class="radio-label">{{ opt }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Q2 — Effectif de votre site de production ? <span class="req">*</span></label>
+        <div class="radio-list">
+          {% set q2_opts = [
+            "Moins de 20 personnes",
+            "20 à 50 personnes",
+            "50 à 150 personnes",
+            "150 à 500 personnes",
+            "Plus de 500 personnes"
+          ] %}
+          {% for opt in q2_opts %}
+          <label class="radio-card">
+            <input type="radio" name="q2_effectif" value="{{ opt }}" required/>
+            <span class="radio-label">{{ opt }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Q3 — Nombre de machines critiques sur le site ? <span class="req">*</span></label>
+        <div class="radio-list">
+          {% set q3_opts = [
+            "Moins de 5",
+            "5 à 15",
+            "15 à 40",
+            "Plus de 40"
+          ] %}
+          {% for opt in q3_opts %}
+          <label class="radio-card">
+            <input type="radio" name="q3_machines" value="{{ opt }}" required/>
+            <span class="radio-label">{{ opt }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- BLOC 2 — MAINTENANCE ACTUELLE -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="form-bloc">
+      <div class="bloc-header">
+        <span class="bloc-num">2</span>
+        <div>
+          <div class="bloc-title">Maintenance Actuelle</div>
+          <div class="bloc-sub">3 questions</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Q4 — Votre type de maintenance aujourd'hui ? <span class="req">*</span></label>
+        <div class="radio-list">
+          {% set q4_opts = [
+            "Corrective uniquement (on répare quand c'est cassé)",
+            "Préventive planifiée (révisions à intervalles fixes)",
+            "Mixte (les deux selon les machines)",
+            "Prédictive partielle (déjà quelques capteurs)"
+          ] %}
+          {% for opt in q4_opts %}
+          <label class="radio-card">
+            <input type="radio" name="q4_maintenance" value="{{ opt }}" required/>
+            <span class="radio-label">{{ opt }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Q5 — Combien de pannes non planifiées par mois en moyenne ? <span class="req">*</span></label>
+        <div class="radio-list">
+          {% set q5_opts = [
+            "Moins de 2",
+            "2 à 5",
+            "5 à 10",
+            "Plus de 10"
+          ] %}
+          {% for opt in q5_opts %}
+          <label class="radio-card">
+            <input type="radio" name="q5_pannes_mois" value="{{ opt }}" required/>
+            <span class="radio-label">{{ opt }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Q6 — Durée moyenne d'un arrêt non planifié ? <span class="req">*</span></label>
+        <div class="radio-list">
+          {% set q6_opts = [
+            "Moins de 2 heures",
+            "2 à 8 heures",
+            "8 à 24 heures",
+            "Plus de 24 heures"
+          ] %}
+          {% for opt in q6_opts %}
+          <label class="radio-card">
+            <input type="radio" name="q6_duree_arret" value="{{ opt }}" required/>
+            <span class="radio-label">{{ opt }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- BLOC 3 — IMPACT FINANCIER -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="form-bloc">
+      <div class="bloc-header">
+        <span class="bloc-num">3</span>
+        <div>
+          <div class="bloc-title">Impact Financier</div>
+          <div class="bloc-sub">3 questions</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Q7 — Chiffre d'affaires annuel du site ? <span class="req">*</span></label>
+        <div class="radio-list">
+          {% set q7_opts = [
+            "Moins de 2 M€",
+            "2 à 10 M€",
+            "10 à 30 M€",
+            "30 à 100 M€",
+            "Plus de 100 M€"
+          ] %}
+          {% for opt in q7_opts %}
+          <label class="radio-card">
+            <input type="radio" name="q7_ca" value="{{ opt }}" required/>
+            <span class="radio-label">{{ opt }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Q8 — Budget maintenance annuel estimé ? <span class="req">*</span></label>
+        <div class="radio-list">
+          {% set q8_opts = [
+            "Moins de 50 K€",
+            "50 à 150 K€",
+            "150 à 500 K€",
+            "Plus de 500 K€"
+          ] %}
+          {% for opt in q8_opts %}
+          <label class="radio-card">
+            <input type="radio" name="q8_budget_maintenance" value="{{ opt }}" required/>
+            <span class="radio-label">{{ opt }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Q9 — Avez-vous déjà subi des pénalités client pour retard lié à une panne ? <span class="req">*</span></label>
+        <div class="radio-list">
+          {% set q9_opts = [
+            "Jamais",
+            "Rarement (1 à 2 fois/an)",
+            "Régulièrement (plus de 3 fois/an)",
+            "C'est un problème récurrent"
+          ] %}
+          {% for opt in q9_opts %}
+          <label class="radio-card">
+            <input type="radio" name="q9_penalites" value="{{ opt }}" required/>
+            <span class="radio-label">{{ opt }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- BLOC 4 — MATURITÉ DIGITALE -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="form-bloc">
+      <div class="bloc-header">
+        <span class="bloc-num">4</span>
+        <div>
+          <div class="bloc-title">Maturité Digitale</div>
+          <div class="bloc-sub">2 questions</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Q10 — Vous disposez d'un ERP ? <span class="req">*</span></label>
+        <div class="radio-list">
+          {% set q10_opts = [
+            "Oui, avec données accessibles",
+            "Oui, mais données difficiles à extraire",
+            "Non, gestion sur Excel",
+            "Non, gestion papier"
+          ] %}
+          {% for opt in q10_opts %}
+          <label class="radio-card">
+            <input type="radio" name="q10_erp" value="{{ opt }}" required/>
+            <span class="radio-label">{{ opt }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Q11 — Des capteurs sont-ils déjà installés sur vos machines ? <span class="req">*</span></label>
+        <div class="radio-list">
+          {% set q11_opts = [
+            "Oui, sur la plupart",
+            "Oui, sur quelques-unes",
+            "Non, aucun",
+            "Je ne sais pas"
+          ] %}
+          {% for opt in q11_opts %}
+          <label class="radio-card">
+            <input type="radio" name="q11_capteurs" value="{{ opt }}" required/>
+            <span class="radio-label">{{ opt }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- BLOC 5 — CONTACT (Q12) -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="form-bloc form-bloc--highlight">
+      <div class="bloc-header">
+        <span class="bloc-num bloc-num--orange">Q12</span>
+        <div>
+          <div class="bloc-title">Vos coordonnées</div>
+          <div class="bloc-sub">Pour recevoir votre rapport personnalisé</div>
+        </div>
+      </div>
+
+      <div class="fields-row">
+        <div class="field-group">
+          <label class="field-label" for="prenom">Prénom <span class="req">*</span></label>
+          <input class="field-input" type="text" id="prenom" name="prenom" placeholder="Jean" required/>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="nom">Nom <span class="req">*</span></label>
+          <input class="field-input" type="text" id="nom" name="nom" placeholder="Dupont" required/>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="entreprise">Entreprise <span class="req">*</span></label>
+        <input class="field-input" type="text" id="entreprise" name="entreprise" placeholder="Nom de votre société" required/>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="email">Email professionnel <span class="req">*</span></label>
+        <input class="field-input" type="email" id="email" name="email" placeholder="jean.dupont@societe.fr" required/>
+      </div>
+
+      <div class="fields-row">
+        <div class="field-group">
+          <label class="field-label" for="tel">Téléphone <span class="opt">(optionnel)</span></label>
+          <input class="field-input" type="tel" id="tel" name="tel" placeholder="+33 6 00 00 00 00"/>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="ville">Ville <span class="opt">(optionnel)</span></label>
+          <input class="field-input" type="text" id="ville" name="ville" placeholder="Lyon"/>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="pays">Pays <span class="opt">(optionnel)</span></label>
+        <input class="field-input" type="text" id="pays" name="pays" value="France"/>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-zone">
+      <p class="submit-hint">
+        🔒 Vos données sont confidentielles. Votre rapport personnalisé vous sera envoyé par email.
+      </p>
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span class="btn-text">Obtenir mon rapport ROI gratuit</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<script>
+// Progress bar
+const radios = document.querySelectorAll('input[type="radio"]');
+const groups = ['q1_secteur','q2_effectif','q3_machines','q4_maintenance',
+                'q5_pannes_mois','q6_duree_arret','q7_ca','q8_budget_maintenance',
+                'q9_penalites','q10_erp','q11_capteurs'];
+function updateProgress() {
+  const answered = groups.filter(g => document.querySelector(`input[name="${g}"]:checked`)).length;
+  // highlight radio cards on select
+}
+radios.forEach(r => {
+  r.addEventListener('change', function() {
+    // Deselect siblings visually
+    document.querySelectorAll(`input[name="${this.name}"]`).forEach(s => {
+      s.closest('.radio-card').classList.remove('selected');
+    });
+    this.closest('.radio-card').classList.add('selected');
+  });
+});
+
+// Submit loading state
+document.querySelector('form').addEventListener('submit', function() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.querySelector('.btn-text').textContent = 'Calcul en cours…';
+  btn.querySelector('.btn-arrow').textContent = '⏳';
+});
+</script>
+{% endblock %}

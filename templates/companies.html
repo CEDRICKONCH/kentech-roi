@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Entreprises — Kentech{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Entreprises enregistrées</h1>
+  <p>{{ records | length }} réponse{% if records | length > 1 %}s{% endif %} au total</p>
+</div>
+
+<div class="table-container">
+  {% if records %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Entreprise</th>
+          <th>Contact</th>
+          <th>Secteur</th>
+          <th>Coût pannes / an</th>
+          <th>Économies / an</th>
+          <th>ROI</th>
+          <th>Score</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td class="td-id">{{ r.id }}</td>
+          <td class="td-date">{{ r.created_at.strftime('%d/%m/%Y') }}</td>
+          <td class="td-company">
+            <div class="company-name">{{ r.entreprise }}</div>
+            <div class="company-location">{{ r.ville }}{% if r.pays and r.pays != 'France' %}, {{ r.pays }}{% endif %}</div>
+          </td>
+          <td>
+            <div>{{ r.prenom }} {{ r.nom }}</div>
+            <div class="td-sub">{{ r.email }}</div>
+          </td>
+          <td>{{ r.q1_secteur }}</td>
+          <td class="td-money td-red">{{ r.cout_pannes_annuel | eur }}</td>
+          <td class="td-money td-green">{{ r.total_economies_an | eur }}</td>
+          <td class="td-money">{{ r.roi_pct }} %</td>
+          <td>
+            <span class="badge badge--{{ 'green' if r.score_maturite >= 60 else ('orange' if r.score_maturite >= 30 else 'red') }}">
+              {{ r.score_maturite }}/100
+            </span>
+          </td>
+          <td>
+            <a href="/entreprises/{{ r.id }}" class="btn-detail">Détail →</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">📋</div>
+    <h2>Aucune réponse pour l'instant</h2>
+    <p>Les entreprises ayant complété le questionnaire apparaîtront ici.</p>
+    <a href="/" class="btn-detail">Accéder au questionnaire</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
