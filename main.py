@@ -152,12 +152,22 @@ async def submit_form(
 
     # Envoi emails en arrière-plan (non bloquant)
     def send_emails():
+        pdf_bytes = None
         try:
             pdf_bytes = build_pdf(form_data, roi)
-            send_client_email(form_data, roi, pdf_bytes)
+        except Exception as e:
+            print(f"[PDF ERROR] {e}")
+
+        try:
+            if pdf_bytes is not None:
+                send_client_email(form_data, roi, pdf_bytes)
+        except Exception as e:
+            print(f"[EMAIL CLIENT ERROR] {e}")
+
+        try:
             send_notification_email(form_data, roi)
         except Exception as e:
-            print(f"[EMAIL ERROR] {e}")
+            print(f"[EMAIL NOTIFICATION ERROR] {e}")
 
     threading.Thread(target=send_emails, daemon=True).start()
 

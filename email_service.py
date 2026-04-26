@@ -305,4 +305,4 @@ def _send(msg: MIMEMultipart) -> None:
         smtp.ehlo()
         smtp.starttls(context=context)
         smtp.login(MAIL_USERNAME, MAIL_PASSWORD)
-        smtp.sendmail(msg["From"], msg["To"], msg.as_string())
+        smtp.send_message(msg)
